@@ -5,6 +5,8 @@ import axios from 'axios';
 import { InputField, PasswordField } from 'components';
 import { AuthEnumsPath, LoginPayload, loginSchema } from 'features/auth/auth';
 import { FC }  from 'react';
+import localStorage from 'localStorage';
+import { STORAGE_KEY } from 'constants/storage/storage';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -29,6 +31,8 @@ const LoginForm: FC<LoginFormProps> = ({ initialValues, onSubmit }) => {
    }else{
     window.location.href = "http://localhost:3000/";
    }
+   localStorage.setItem(STORAGE_KEY.TOKEN, JSON.stringify(data.data.message.token));
+   localStorage.setItem(STORAGE_KEY.TOKEN, JSON.stringify(data.data.message));
    } catch (error) {
      
    }
