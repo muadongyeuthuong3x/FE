@@ -4,8 +4,8 @@ import Logo from 'assets/image/logo.png';
 import axios from 'axios';
 import { InputField, PasswordField } from 'components';
 import { AuthEnumsPath, LoginPayload, loginSchema } from 'features/auth/auth';
-import { FC }  from 'react';
-import localStorage from 'localStorage';
+import { FC } from 'react';
+import { LocalKey, LocalStorage } from "ts-localstorage";
 import { STORAGE_KEY } from 'constants/storage/storage';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -21,21 +21,23 @@ const LoginForm: FC<LoginFormProps> = ({ initialValues, onSubmit }) => {
     resolver: yupResolver(loginSchema),
   });
 
-  const handleFormSubmit = async(formValues: LoginPayload) => {
-   try {
-   const data:any =  await axios.post("http://localhost:5000/api/auth/login" ,formValues)
+  const handleFormSubmit = async (formValues: LoginPayload) => {
+    try {
+      const data: any = await axios.post("http://localhost:5000/api/auth/login", formValues)
 
-   if(data.data.message.role ==="Admin"){
-   
-    window.location.href = "http://localhost:3005/brand";
-   }else{
-    window.location.href = "http://localhost:3000/";
-   }
-   localStorage.setItem(STORAGE_KEY.TOKEN, JSON.stringify(data.data.message.token));
-   localStorage.setItem(STORAGE_KEY.TOKEN, JSON.stringify(data.data.message));
-   } catch (error) {
-     
-   }
+      if (data.data.message.role === "Admin") {
+
+        window.location.href = "http://localhost:3005/brand";
+      } else {
+        window.location.href = "http://localhost:3000/";
+      }
+      const key = new LocalKey(STORAGE_KEY.TOKEN, "");
+      const keyUser = new LocalKey(STORAGE_KEY.USER, "");
+      LocalStorage.setItem(key, JSON.stringify(data.data.message.token));
+      localStorage.setItem( keyUser, JSON.stringify(data.data.message));
+    } catch (error) {
+
+    }
   };
 
   return (
